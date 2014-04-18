@@ -1,3 +1,28 @@
+window.sendText = (form) ->
+    removeClass 'results'
+    searchText = form.auto_text.value
+    # alert searchText
+    if searchText.length > 1
+        completeOptions = autoComplete searchText
+        finalOptions = []
+        finalOptions.push(create("<div class='results'>#{ completeResult }</div>")) for completeResult in completeOptions
+        document.body.appendChild aFinalOption for aFinalOption in finalOptions
+
+removeClass = (classToDelete) ->
+    resultsToRemove = document.getElementsByClassName classToDelete
+    resultsToRemove[0].parentNode.removeChild(resultsToRemove[0]) while resultsToRemove[0]?
+
+create = (htmlStr) ->
+  frag = document.createDocumentFragment()
+  window.temp = document.createElement("div")
+  temp.innerHTML = htmlStr
+  frag.appendChild temp.firstChild while temp.firstChild
+  frag
+# fragment = create("<div>Hello!</div><p>...</p>")
+
+# You can use native DOM methods to insert the fragment:
+# document.body.insertBefore fragment, document.body.childNodes[0]
+
 autoComplete = (searchTerm) ->
     searcher = new RegExp('^' + searchTerm, "i")
 
@@ -64,5 +89,3 @@ autoComplete = (searchTerm) ->
     matchers.push(theEntry.keyName) for theEntry in key_list when searcher.test(theEntry.keyName) is true if matchers.length is 0
 
     matchers
-
-alert autoComplete "left su"
