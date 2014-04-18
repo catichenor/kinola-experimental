@@ -9,8 +9,6 @@ class kinolaParser
         @parsedString
 
     parseThis: (theString, theFormat) ->
-        # theString = theString.replace /\s/g, ""
-
         if theFormat is "short" then shortString = true else shortString = false 
         if shortString then delimiter = "/" else delimiter = ","
         separatedString = theString.split(delimiter)
