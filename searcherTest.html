@@ -1,12 +1,21 @@
 <HTML>
-<HEAD>
-<TITLE>searcherTest</TITLE>
-<SCRIPT SRC="./searcherTest.js" TYPE='text/javascript' CHARSET="utf-8"></SCRIPT>
-</HEAD>
-<BODY>
-<FORM NAME="test_form" ACTION="" METHOD="GET" id="testform">
-Enter what you want to type:<BR />
-<INPUT TYPE="text" ID="autotext" NAME="auto_text" VALUE="" onkeyup="sendText(this.form);"/><P />
-</FORM>
-</BODY>
+    <HEAD>
+        <TITLE>searcherTest</TITLE>
+            <style> 
+            .results {
+                font-size:80%;
+                font-family:sans-serif;
+                border:1px solid #a1a1a1;
+                padding:5px 5px; 
+                background:#eeeeee;
+                width:128px;
+            }
+            </style>
+        <SCRIPT SRC="./searcherTest.js" TYPE='text/javascript' CHARSET="utf-8"></SCRIPT>
+    </HEAD>
+    <BODY>
+        <FORM NAME="test_form" ACTION="" METHOD="GET" id="testform">Enter what you want to type:<BR />
+            <INPUT TYPE="text" ID="autotext" NAME="auto_text" VALUE="" onkeyup="sendText(this.form);"/><P />
+        </FORM>
+    </BODY>
 </HTML>
