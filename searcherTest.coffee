@@ -1,5 +1,4 @@
-window.sendText = (form) ->
-    removeClass 'results'
+window.sendText = (e, form) ->
     searchText = form.auto_text.value
     # alert searchText
     if searchText.length > 1
@@ -7,6 +6,28 @@ window.sendText = (form) ->
         finalOptions = []
         finalOptions.push(create("<div class='results'>#{ completeResult }</div>")) for completeResult in completeOptions
         document.body.appendChild aFinalOption for aFinalOption in finalOptions
+    setSelection(window.counter)
+
+window.selectOption = (e) ->
+    removeClass 'selected'
+    removeClass 'results'
+    window.lastKeyCode = e.keyCode
+    if window.lastKeyCode is 40
+        window.counter = window.counter + 1
+    else if window.lastKeyCode is 38
+        window.counter = window.counter - 1 
+    else
+        window.counter = 0
+
+setSelection = (selectionNumber) ->
+    allResults = document.getElementsByClassName 'results'
+    resultSelection = selectionNumber.mod(allResults.length)
+    # alert allResults[resultSelection].textContent
+    allResults[resultSelection].setAttribute("class", "selected")
+    return
+
+Number::mod = (n) ->
+    ((this % n) + n) % n # "Fixing" the modulo negative "bug"
 
 removeClass = (classToDelete) ->
     resultsToRemove = document.getElementsByClassName classToDelete
