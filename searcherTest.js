@@ -3,7 +3,7 @@
   var autoComplete, create, removeClass, setSelection;
 
   window.sendText = function(e, form) {
-    var aFinalOption, completeOptions, completeResult, finalOptions, searchText, _i, _j, _len, _len1;
+    var aFinalOption, completeOptions, completeResult, finalOptions, searchText, selectedOptions, _i, _j, _len, _len1;
     searchText = form.auto_text.value;
     if (searchText.length > 1) {
       completeOptions = autoComplete(searchText);
@@ -17,10 +17,14 @@
         document.body.appendChild(aFinalOption);
       }
     }
-    return setSelection(window.counter);
+    setSelection(window.counter);
+    if (window.lastKeyCode === 39) {
+      selectedOptions = document.getElementsByClassName('selected');
+      form.auto_text.value = selectedOptions[0].textContent;
+    }
   };
 
-  window.selectOption = function(e) {
+  window.selectOption = function(e, form) {
     removeClass('selected');
     removeClass('results');
     window.lastKeyCode = e.keyCode;
@@ -28,6 +32,8 @@
       return window.counter = window.counter + 1;
     } else if (window.lastKeyCode === 38) {
       return window.counter = window.counter - 1;
+    } else if (window.lastKeyCode === 39) {
+
     } else {
       return window.counter = 0;
     }

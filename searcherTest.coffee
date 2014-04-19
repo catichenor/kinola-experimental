@@ -7,15 +7,20 @@ window.sendText = (e, form) ->
         finalOptions.push(create("<div class='results'>#{ completeResult }</div>")) for completeResult in completeOptions
         document.body.appendChild aFinalOption for aFinalOption in finalOptions
     setSelection(window.counter)
+    if window.lastKeyCode is 39
+        selectedOptions = document.getElementsByClassName 'selected'
+        form.auto_text.value=selectedOptions[0].textContent
+    return
 
-window.selectOption = (e) ->
+window.selectOption = (e, form) ->
     removeClass 'selected'
     removeClass 'results'
     window.lastKeyCode = e.keyCode
     if window.lastKeyCode is 40
         window.counter = window.counter + 1
     else if window.lastKeyCode is 38
-        window.counter = window.counter - 1 
+        window.counter = window.counter - 1
+    else if window.lastKeyCode is 39
     else
         window.counter = 0
 
