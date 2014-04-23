@@ -1,42 +1,72 @@
-window.sendText = (e, form) ->
-    searchText = form.auto_text.value
-    # alert searchText
-    if searchText.length > 1
-        completeOptions = autoComplete searchText
-        finalOptions = []
-        finalOptions.push(create("<div class='results'>#{ completeResult }</div>")) for completeResult in completeOptions
-        document.body.appendChild aFinalOption for aFinalOption in finalOptions
-    setSelection(window.counter)
-    if window.lastKeyCode is 39
-        selectedOptions = document.getElementsByClassName 'selected'
-        form.auto_text.value=selectedOptions[0].textContent
+window.respondToKeyUp = (e, form) ->
+    lastKey = window.lastKeyCode
+    window.fieldEntry = getFieldValue(form, "auto_text")
+    if window.fieldEntry.length > 1 and checkSpecial(lastKey) #Field length is large enough, and excluding "special" keys.
+        showOptions(window.fieldEntry)
+    if window.fieldEntry.length < 2
+        removeClass('results', 'selected')
     return
 
-window.selectOption = (e, form) ->
-    removeClass 'selected'
-    removeClass 'results'
-    window.lastKeyCode = e.keyCode
-    if window.lastKeyCode is 40
+window.respondToKeyDown = (e, form) ->
+    window.lastKeyCode = e.which
+    window.fieldEntry = getFieldValue(form, "auto_text")
+    if window.optionsFound is true
+        switch window.lastKeyCode 
+            when 40 then moveAutoCompleteOptionDown(true)
+            when 38 then moveAutoCompleteOptionDown(false)
+            when 39 then completeSelection(form, "auto_text")
+            else return
+    return
+
+showOptions = (searchText) ->
+     removeClass('results', 'selected')
+     completeOptions = getAutoCompleteOptions searchText
+     finalOptions = []
+     finalOptions.push(create("<div class='results'>#{ completeResult }</div>")) for completeResult in completeOptions
+     document.body.appendChild aFinalOption for aFinalOption in finalOptions
+     window.optionsFound = finalOptions.length > 0
+     setSelection(0)
+     return
+
+checkSpecial = (kc) ->
+    (kc is 8) or (kc > 45 and kc < 91) or (kc > 95 and kc < 112) or (kc > 185 and kc < 223)
+
+moveAutoCompleteOptionDown = (moveDown) ->
+    if moveDown
         window.counter = window.counter + 1
-    else if window.lastKeyCode is 38
-        window.counter = window.counter - 1
-    else if window.lastKeyCode is 39
     else
-        window.counter = 0
+        window.counter = window.counter - 1
+    setSelection(window.counter)
+    return
+
+completeSelection = (form, fieldName) ->
+    selectedOptions = document.getElementsByClassName 'selected'
+    setFieldValue(form, fieldName, selectedOptions[0].textContent)
+    removeClass('results', 'selected')
 
 setSelection = (selectionNumber) ->
+    selectedResults = document.getElementsByClassName 'selected'
+    eachSelection.setAttribute("class", "results") for eachSelection in selectedResults
     allResults = document.getElementsByClassName 'results'
     resultSelection = selectionNumber.mod(allResults.length)
-    # alert allResults[resultSelection].textContent
     allResults[resultSelection].setAttribute("class", "selected")
     return
 
 Number::mod = (n) ->
     ((this % n) + n) % n # "Fixing" the modulo negative "bug"
 
-removeClass = (classToDelete) ->
-    resultsToRemove = document.getElementsByClassName classToDelete
-    resultsToRemove[0].parentNode.removeChild(resultsToRemove[0]) while resultsToRemove[0]?
+getFieldValue = (form, fieldName) ->
+    form[fieldName].value
+
+setFieldValue = (form, fieldName, newValue) ->
+    form[fieldName].value = newValue
+    return
+
+removeClass = (classesToDelete...) ->
+    for classToDelete in classesToDelete
+        resultsToRemove = document.getElementsByClassName classToDelete
+        resultsToRemove[0].parentNode.removeChild(resultsToRemove[0]) while resultsToRemove[0]?
+    return
 
 create = (htmlStr) ->
   frag = document.createDocumentFragment()
@@ -49,7 +79,7 @@ create = (htmlStr) ->
 # You can use native DOM methods to insert the fragment:
 # document.body.insertBefore fragment, document.body.childNodes[0]
 
-autoComplete = (searchTerm) ->
+getAutoCompleteOptions = (searchTerm) ->
     searcher = new RegExp('^' + searchTerm, "i")
 
     key_list = [ { asciiValue: 128, keyName: "left ctrl", showInList: false },

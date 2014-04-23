@@ -21,13 +21,16 @@
             </style>
         <SCRIPT SRC="./searcherTest.js" TYPE='text/javascript' CHARSET="utf-8"></SCRIPT>
         <SCRIPT TYPE='text/javascript'>
+            window.optionsFound=false;
+            window.fieldEntry="";
             window.counter=0;
+            window.lastCount=0;
             window.lastKeyCode=0;
         </SCRIPT>
     </HEAD>
     <BODY>
         <FORM NAME="test_form" ACTION="" METHOD="GET" id="testform">Enter what you want to type:<BR />
-            <INPUT TYPE="text" ID="autotext" NAME="auto_text" VALUE="" onkeypress="selectOption(event, this.form);" onkeyup="sendText(event, this.form);"/><P />
+            <INPUT TYPE="text" ID="autotext" NAME="auto_text" VALUE="" onkeydown="respondToKeyDown(event, this.form);" onkeyup="respondToKeyUp(event, this.form);"/><P />
         </FORM>
     </BODY>
 </HTML>
