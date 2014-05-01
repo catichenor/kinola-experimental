@@ -42,7 +42,6 @@ moveAutoCompleteOptionDown = (moveDown) ->
 completeSelection = (form, fieldName) ->
     selectedOptions = document.getElementsByClassName 'selected'
     setFieldValue(form, fieldName, selectedOptions[0].textContent)
-    removeClass('results', 'selected')
 
 setSelection = (selectionNumber) ->
     selectedResults = document.getElementsByClassName 'selected'
